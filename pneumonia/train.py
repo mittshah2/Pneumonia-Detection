@@ -7,15 +7,14 @@ import os
 import sys
 
 
-def train(epochs,w,h,steps_per_epoch,df_path):
+def train(epochs,w,h,steps_per_epoch,df_path,train_images):
     model=get_model((w,h,3))
     class_weight = {0: 1, 1: 3.3}
 
     early = EarlyStopping(monitor='accuracy', patience=3, mode='auto')
     reduce_lr = ReduceLROnPlateau(monitor='accuracy', factor=0.5, patience=2, verbose=1, cooldown=0, mode='auto',min_delta=0.0001, min_lr=0)
 
-    store(df_path)
-    print(epochs,df_path,'ok')
+    store(train_images,df_path,w,h)
 
     datagen = ImageDataGenerator(samplewise_center=True, samplewise_std_normalization=True, horizontal_flip=True,
                                  width_shift_range=0.05, rescale=1 / 255, fill_mode='nearest', height_shift_range=0.05,
@@ -40,7 +39,12 @@ def main():
     my_parser.add_argument('--df_path',
                            metavar='df_path',
                            type=str,
-                           help='the path of the dataframe containing metada',required=True)
+                           help='the path of the dataframe containing metadata',required=True)
+    
+    my_parser.add_argument('--train_images_path',
+                           metavar='train_images_path',
+                           type=str,
+                           help='the path of the directory containing training dicom files',required=True)
 
     my_parser.add_argument('--epochs',
                            metavar='epochs',
@@ -72,7 +76,7 @@ def main():
 
     args = my_parser.parse_args()
     
-    train(args.epochs,args.width,args.height,args.steps_per_epoch,args.df_path)
+    train(args.epochs,args.width,args.height,args.steps_per_epoch,args.df_path,args.train_images_path)
 
 if __name__=='__main__':
     main()
