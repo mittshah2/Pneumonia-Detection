@@ -1,6 +1,7 @@
 from dcm2jpg import store
 from model import get_model
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.applications.vgg19 import VGG19,preprocess_input
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import argparse
 import os

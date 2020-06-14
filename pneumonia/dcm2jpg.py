@@ -3,15 +3,23 @@ import pandas as pd
 from skimage.transform import resize
 from tqdm import tqdm
 import pydicom as dicom
+import numpy as np
+import matplotlib.pyplot as plt
 
 def store(train_images,df_path,w=256,h=256):
 
-    os.mkdir('data')
-    os.mkdir('data/positive')
-    os.mkdir('data/negative')
-    df = pd.read_csv(df_path)
+    if os.path.isfile('data')==False:
+        os.mkdir('data')
+        os.mkdir(os.path.join('data','positive'))
+        os.mkdir(os.path.join('data','negative'))
 
-    df['path'] = train_images + df['patientId'].astype(str) + '.dcm'
+    df = pd.read_csv(df_path)
+    x=np.asarray(df['patientId'].astype(str) + '.dcm')
+
+    for i in range(len(x)):
+        x[i]=os.path.join(train_images,x[i])
+
+    df['path'] = x
 
     negative = df[df['Target'] == 0]
 
@@ -26,12 +34,12 @@ def store(train_images,df_path,w=256,h=256):
     for _, row in tqdm(unique_positive.iterrows()):
         img = dicom.read_file(row['path']).pixel_array
         img = resize(img, (w, h))
-        plt.imsave('data/positive/' + row['patientId'] + '.jpg', img, cmap='gray')
+        plt.imsave(os.path.join(os.path.join('data','positive') ,str(row['patientId']) + '.jpg' ), img, cmap='gray')
 
     for _, row in tqdm(negative.iterrows()):
         img = dicom.read_file(row['path']).pixel_array
         img = resize(img, (w, h))
-        plt.imsave('data/negative/' + row['patientId'] + '.jpg', img, cmap='gray')
+        plt.imsave(os.path.join(os.path.join('data','negative') , str(row['patientId']) + '.jpg'), img, cmap='gray')
 
 
 
