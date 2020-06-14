@@ -29,7 +29,7 @@ def generate_samples(train_images,df_path,size):
 
         img_dcm_path=os.path.join(train_images,i[:-4]+'.dcm')
         img=dicom.read_file(img_dcm_path).pixel_array
-        plt.imsave(os.path.join('train_images',i),img)
+        plt.imsave(os.path.join('train_images',i),img,cmap='gray')
 
 
         fil = open(path, 'a')
@@ -41,10 +41,11 @@ def generate_samples(train_images,df_path,size):
 
     image_files = []
     path = 'train_images'
+    base=os.getcwd()
     os.chdir(path)
     for filename in os.listdir(os.getcwd()):
         if filename.endswith(".jpg"):
-            image_files.append(path + filename)
+            image_files.append(os.path.join(base,os.path.join(path , filename)))
     os.chdir("..")
     with open("train.txt", "w") as outfile:
         for image in image_files:
