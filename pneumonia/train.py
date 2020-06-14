@@ -33,6 +33,8 @@ def train(epochs,w,h,steps_per_epoch,df_path,train_images):
         model.fit(train, epochs=epochs, callbacks=[early,reduce_lr], validation_data=test,
                   class_weight=class_weight)
 
+    model.save('model.h5')
+    
 def main():
     my_parser = argparse.ArgumentParser(description='Pneumonia detection')
 
