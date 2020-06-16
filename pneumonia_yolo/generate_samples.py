@@ -19,7 +19,9 @@ def generate_samples(train_images,df_path,size):
     files=np.random.choice(files,size=size)
 
     os.chdir('../../pneumonia_yolo')
-    os.mkdir('train_images')
+    
+    if os.path.exists('train_images')==False:
+        os.mkdir('train_images')
 
     df=pd.read_csv(df_path)
 
