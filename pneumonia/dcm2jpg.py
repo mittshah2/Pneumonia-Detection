@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 def store(train_images,df_path,w=256,h=256):
 
-    if os.path.isfile('data')==False:
+    if os.path.exists('data')==False:
         os.mkdir('data')
         os.mkdir(os.path.join('data','positive'))
         os.mkdir(os.path.join('data','negative'))
@@ -40,6 +40,7 @@ def store(train_images,df_path,w=256,h=256):
         img = dicom.read_file(row['path']).pixel_array
         img = resize(img, (w, h))
         plt.imsave(os.path.join(os.path.join('data','negative') , str(row['patientId']) + '.jpg'), img, cmap='gray')
+
 
 
 
